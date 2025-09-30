@@ -19,7 +19,7 @@ class Product extends Model
         'thumbnail',
         'category_id',
         'store_id',
-        'stock_quantity',
+        'quantity',
         'status', // e.g., active, inactive, out_of_stock
     ];
 

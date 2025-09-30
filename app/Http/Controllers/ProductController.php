@@ -33,7 +33,26 @@ class ProductController extends Controller
         //for only sellers
         $this->authorize('create', Product::class);
 
-        return response()->json(['message' => 'Not implemented yet'], 501);
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'required|string',
+            'features' => 'nullable|json', // New JSON field for features
+            'price' => 'required|numeric|min:0',
+            'discount_price' => 'nullable|numeric|min:0|lt:price',
+            'thumbnail' => 'nullable|string|max:255',
+            'category_id' => 'required|exists:categories,id',
+            'quantity' => 'required|integer|min:0',
+            'status' => 'required|in:active,inactive,out_of_stock',
+        ]);
+        $store = auth()->user()->store;
+           if (! $store) {
+        return response()->json(['message' => 'You must create a store first.'], 400);
+    }
+        $product = $store->products()->create($request->all());
+
+          $product->save();
+
+        return response()->json(['message' => 'Porduct created successfully', 'store' =>  $product], 201);
 
 
     }
