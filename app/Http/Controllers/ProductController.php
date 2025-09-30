@@ -52,7 +52,7 @@ class ProductController extends Controller
 
           $product->save();
 
-        return response()->json(['message' => 'Porduct created successfully', 'store' =>  $product], 201);
+        return response()->json(['message' => 'Product created successfully', 'store' =>  $product], 201);
 
 
     }
@@ -60,9 +60,11 @@ class ProductController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Product $product)
     {
-        //
+
+        return response()->json($product);
+
     }
 
     /**
@@ -76,9 +78,32 @@ class ProductController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Product $product)
     {
-        //
+             //for only sellers
+        $this->authorize('update', $product);
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'required|string',
+            'features' => 'nullable|json', // New JSON field for features
+            'price' => 'required|numeric|min:0',
+            'discount_price' => 'nullable|numeric|min:0|lt:price',
+            'thumbnail' => 'nullable|string|max:255',
+            'category_id' => 'required|exists:categories,id',
+            'quantity' => 'required|integer|min:0',
+            'status' => 'required|in:active,inactive,out_of_stock',
+        ]);
+        $store = auth()->user()->store;
+           if (! $store) {
+        return response()->json(['message' => 'You must create a store first.'], 400);
+    }
+        $product = $store->products();
+              $product->update($request->all());
+
+        return response()->json(['message' => 'Product created successfully', 'store' =>  $product], 201);
+
+
     }
 
     /**
