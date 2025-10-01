@@ -98,10 +98,10 @@ class ProductController extends Controller
            if (! $store) {
         return response()->json(['message' => 'You must create a store first.'], 400);
     }
-        $product = $store->products();
+             //update the product not relationship itself
               $product->update($request->all());
 
-        return response()->json(['message' => 'Product created successfully', 'store' =>  $product], 201);
+        return response()->json(['message' => 'Product update successfully', 'store' =>  $product], 201);
 
 
     }

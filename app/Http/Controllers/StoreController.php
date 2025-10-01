@@ -50,7 +50,7 @@ class StoreController extends Controller
         ]);
 
         $user->role = 'seller';
-       $store=$user->stores()->create($request->all());
+       $store=$user->store()->create($request->all());
 
         $user->save();
 
