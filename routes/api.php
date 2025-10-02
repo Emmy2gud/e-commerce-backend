@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StoreController;
+use App\Http\Controllers\CartController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -22,4 +23,16 @@ Route::post('/profiles/{user}', [ProfileController::class, 'update'])->middlewar
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::apiResource('/store', StoreController::class);
     Route::apiResource('/product', ProductController::class);
+
+
+Route::post('cart/add/{productId}', [CartController::class, 'addToCart']);
+Route::get('/cart', [CartController::class, 'showCart']);
+Route::post('/cart/update/{courseId}', [CartController::class, 'updateCart'])->name('cart.update');
+Route::delete('/cart/{course}', [CartController::class, 'removeFromCart']);
+Route::post('/cart/sync', [CartController::class, 'syncCart']);
+
+
+
+
+
 });
